@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -12,10 +13,13 @@ class loginPage extends StatefulWidget {
 }
 
 class _loginPageState extends State<loginPage> {
+  final formKey = GlobalKey<FormState>();
   final emailLogin = TextEditingController();
   final passwordLogin = TextEditingController();
 
   Future Login() async {
+    final isValid = formKey.currentState!.validate();
+    if(!isValid) return;
     await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailLogin.text.trim(), password: passwordLogin.text.trim());
   }
@@ -25,19 +29,32 @@ class _loginPageState extends State<loginPage> {
     return Scaffold(
       appBar: AppBar(title: Text("Warehouse"), centerTitle: true),
       body: Container(
-        child: Column(
+        child: Form(
+          key: formKey,
+          child: Column(
           children: [
             SizedBox(height: 40),
-            TextField(
+            TextFormField(
               controller: emailLogin,
               textInputAction: TextInputAction.next,
               decoration: InputDecoration(labelText: "Email"),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (email) =>
+                  email != null && !EmailValidator.validate(email)
+                      ? "Enter a valid email"
+                      : null,
             ),
             SizedBox(height: 5),
-            TextField(
-                controller: passwordLogin,
-                textInputAction: TextInputAction.next,
-                decoration: InputDecoration(labelText: "Password")),
+            TextFormField(
+              controller: passwordLogin,
+              textInputAction: TextInputAction.next,
+              obscureText: true,
+              decoration: InputDecoration(labelText: "Password"),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) => value != null && value.length < 6
+                  ? "Enter minimal 6 characters"
+                  : null,
+            ),
             SizedBox(height: 20),
             ElevatedButton.icon(
                 style:
@@ -60,6 +77,7 @@ class _loginPageState extends State<loginPage> {
                           color: Theme.of(context).colorScheme.secondary))
                 ]))
           ],
+        ),
         ),
       ),
     );

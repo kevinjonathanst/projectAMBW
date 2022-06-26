@@ -13,25 +13,11 @@ class AddBarang extends StatefulWidget {
   State<AddBarang> createState() => _AddBarangState();
 }
 
-Future<bool> checknotExist(String docID) async {
-  DocumentSnapshot<Map<String, dynamic>> document =
-      await FirebaseFirestore.instance.collection('tbStok').doc(docID).get();
-
-  if (document.exists) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 class _AddBarangState extends State<AddBarang> {
   final namabarang = TextEditingController();
   final kategori = TextEditingController();
   final jumlah = TextEditingController();
   final user = FirebaseAuth.instance.currentUser!;
-  var jumlahfirebase;
-
-  bool exist = false;
 
   @override
   Widget build(BuildContext context) {
@@ -72,12 +58,7 @@ class _AddBarangState extends State<AddBarang> {
                     jumlah: jumlah.text,
                     User: user.email.toString(),
                   );
-                  if (checknotExist(dtBaru.namabarang) == false) {
-                    Database.addData(item: dtBaru);
-                    Database.addhistory(item: dtHistory);
-                  } else {
-                    print("Data sudah ada");
-                  }
+                  getDoc(dtBaru.namabarang, dtBaru.kategori, dtBaru.jumlah, dtHistory.User);
                   Navigator.pop(context);
                 },
                 icon: Icon(Icons.add),
@@ -87,5 +68,42 @@ class _AddBarangState extends State<AddBarang> {
         ),
       ),
     );
+  }
+}
+
+Future getDoc(String namabarang_, String kategoribarang_, String jumlah_,
+    String user_) async {
+  var dtBaru = StokBarang(
+    namabarang: namabarang_,
+    kategori: kategoribarang_,
+    jumlah: jumlah_,
+  );
+  var dtHistory = History(
+      nama: namabarang_,
+      kategori: kategoribarang_,
+      jumlah: jumlah_,
+      User: user_);
+  var a = await FirebaseFirestore.instance
+      .collection('tbStok')
+      .doc(namabarang_)
+      .get();
+  if (a.exists) {
+    print('Exists');
+    return a;
+  }
+  if (!a.exists) {
+      Database.addData(
+        item: StokBarang(
+            namabarang: dtBaru.namabarang,
+            kategori: dtBaru.kategori,
+            jumlah: dtBaru.jumlah));
+    Database.addhistory(
+        item: History(
+            nama: dtHistory.nama,
+            kategori: dtHistory.kategori,
+            jumlah: dtHistory.jumlah,
+            User: dtHistory.User));
+    print('Not exists');
+    return null;
   }
 }

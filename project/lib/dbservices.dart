@@ -44,6 +44,12 @@ class Database {
     }
   }
 
+  static Stream<QuerySnapshot> getkategori() {
+    return tbStok
+      .orderBy("kategori")
+      .snapshots();
+  }
+
   static Future<void> addData({required StokBarang item}) async {
     DocumentReference docRef = tbStok.doc(item.namabarang);
 

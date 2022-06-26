@@ -17,10 +17,6 @@ class _signupPage extends State<signupPage> {
   final passwordSignup = TextEditingController();
 
   Future SignUp() async {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(child: CircularProgressIndicator()));
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailSignup.text.trim(),

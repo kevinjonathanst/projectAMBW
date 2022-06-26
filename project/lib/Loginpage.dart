@@ -23,7 +23,7 @@ class _loginPageState extends State<loginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Warehouse")),
+      appBar: AppBar(title: Text("Warehouse"), centerTitle: true),
       body: Container(
         child: Column(
           children: [

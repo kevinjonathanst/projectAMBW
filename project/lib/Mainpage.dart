@@ -20,6 +20,7 @@ class homePage extends StatefulWidget {
 class _homePageState extends State<homePage> {
   int _selectedIndex = 0;
   String name = " ";
+  final user = FirebaseAuth.instance.currentUser!;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
@@ -62,7 +63,7 @@ class _homePageState extends State<homePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home"),centerTitle: true,
+        title: Text("Halo, " + user.email.toString()),centerTitle: true,
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: Icon(Icons.exit_to_app),

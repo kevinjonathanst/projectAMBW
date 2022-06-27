@@ -18,10 +18,12 @@ class _loginPageState extends State<loginPage> {
   final passwordLogin = TextEditingController();
 
   Future Login() async {
-    final isValid = formKey.currentState!.validate();
-    if(!isValid) return;
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailLogin.text.trim(), password: passwordLogin.text.trim());
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailLogin.text.trim(), password: passwordLogin.text.trim());
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -32,52 +34,52 @@ class _loginPageState extends State<loginPage> {
         child: Form(
           key: formKey,
           child: Column(
-          children: [
-            SizedBox(height: 40),
-            TextFormField(
-              controller: emailLogin,
-              textInputAction: TextInputAction.next,
-              decoration: InputDecoration(labelText: "Email"),
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (email) =>
-                  email != null && !EmailValidator.validate(email)
-                      ? "Enter a valid email"
-                      : null,
-            ),
-            SizedBox(height: 5),
-            TextFormField(
-              controller: passwordLogin,
-              textInputAction: TextInputAction.next,
-              obscureText: true,
-              decoration: InputDecoration(labelText: "Password"),
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value) => value != null && value.length < 6
-                  ? "Enter minimal 6 characters"
-                  : null,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton.icon(
-                style:
-                    ElevatedButton.styleFrom(minimumSize: Size.fromHeight(50)),
-                onPressed: Login,
-                icon: Icon(Icons.lock_open),
-                label: Text("Login")),
-            SizedBox(height: 10),
-            RichText(
-                text: TextSpan(
-                    style: TextStyle(color: Colors.grey),
-                    text: "Belum punya akun? ",
-                    children: [
-                  TextSpan(
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = widget.onclickSignup,
-                      text: "Sign Up",
-                      style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          color: Theme.of(context).colorScheme.secondary))
-                ]))
-          ],
-        ),
+            children: [
+              SizedBox(height: 40),
+              TextFormField(
+                controller: emailLogin,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(labelText: "Email"),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (email) =>
+                    email != null && !EmailValidator.validate(email)
+                        ? "Enter a valid email"
+                        : null,
+              ),
+              SizedBox(height: 5),
+              TextFormField(
+                controller: passwordLogin,
+                textInputAction: TextInputAction.next,
+                obscureText: true,
+                decoration: InputDecoration(labelText: "Password"),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) => value != null && value.length < 6
+                    ? "Enter minimal 6 characters"
+                    : null,
+              ),
+              SizedBox(height: 20),
+              ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size.fromHeight(50)),
+                  onPressed: Login,
+                  icon: Icon(Icons.lock_open),
+                  label: Text("Login")),
+              SizedBox(height: 10),
+              RichText(
+                  text: TextSpan(
+                      style: TextStyle(color: Colors.grey),
+                      text: "Belum punya akun? ",
+                      children: [
+                    TextSpan(
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = widget.onclickSignup,
+                        text: "Sign Up",
+                        style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: Theme.of(context).colorScheme.secondary))
+                  ]))
+            ],
+          ),
         ),
       ),
     );

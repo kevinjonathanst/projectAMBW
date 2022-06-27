@@ -19,6 +19,7 @@ class homePage extends StatefulWidget {
 
 class _homePageState extends State<homePage> {
   int _selectedIndex = 0;
+  String name = " ";
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
@@ -60,9 +61,7 @@ class _homePageState extends State<homePage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'), centerTitle: true
-      ),
+      appBar: AppBar(title: Text("Home"), centerTitle: true),
       //create a button on top of the screen
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -71,7 +70,7 @@ class _homePageState extends State<homePage> {
             MaterialPageRoute(builder: (context) => PageFilter()),
           );
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.search),
       ),
       body: StreamBuilder<QuerySnapshot>(
           stream: Database.getData(),

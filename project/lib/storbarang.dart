@@ -101,7 +101,7 @@ Future getDoc(String namabarang_, String kategoribarang_, String jumlah_,
         item: History(
             nama: dtHistory.nama,
             kategori: dtHistory.kategori,
-            jumlah: dtHistory.jumlah,
+            jumlah: "+" + dtHistory.jumlah,
             User: dtHistory.User));
     print('Not exists');
     return null;

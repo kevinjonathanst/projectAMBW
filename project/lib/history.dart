@@ -1,12 +1,10 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'dbservices.dart';
 
 class history extends StatefulWidget {
-  const history({ Key? key }) : super(key: key);
+  const history({Key? key}) : super(key: key);
 
   @override
   State<history> createState() => _historyState();
@@ -30,14 +28,11 @@ class _historyState extends State<history> {
                     String lvnamabarang = dsStok["nama"];
                     String lvkategori = dsStok["kategori"];
                     String lvjumlah = dsStok["jumlah"];
-                    return Container(
-                      child: Card(
-                        child: Column(children: <Widget>[
-                          Text(lvuser),
-                          Text(lvnamabarang),
-                          Text(lvkategori),
-                          Text(lvjumlah),
-                        ]),
+                    return Card(
+                      child: ListTile(
+                        title: Text(lvnamabarang),
+                        subtitle: Text(lvkategori),
+                        trailing: Text(lvuser + "\nJumlah : " + lvjumlah),
                       ),
                     );
                   },

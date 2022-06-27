@@ -22,7 +22,8 @@ class _loginPageState extends State<loginPage> {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailLogin.text.trim(), password: passwordLogin.text.trim());
     } on FirebaseAuthException catch (e) {
-      print(e);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Email/Password Salah")));
     }
   }
 

@@ -61,7 +61,16 @@ class _homePageState extends State<homePage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Home"), centerTitle: true),
+      appBar: AppBar(
+        title: Text("Home"),centerTitle: true,
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.exit_to_app),
+          onPressed: () {
+            FirebaseAuth.instance.signOut();
+          },
+        ),
+      ),
       //create a button on top of the screen
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -95,7 +104,11 @@ class _homePageState extends State<homePage> {
                           //   MaterialPageRoute(
                           //       builder: (context) => narikbarang()),
                           // );
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => narikbarang(namabarang: lvnamabarang, kategori: lvkategori, jumlah: lvjumlah)));
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => narikbarang(
+                                  namabarang: lvnamabarang,
+                                  kategori: lvkategori,
+                                  jumlah: lvjumlah)));
                         },
                       ),
                     );

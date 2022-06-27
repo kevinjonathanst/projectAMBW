@@ -10,8 +10,7 @@ class signupPage extends StatefulWidget {
   const signupPage({Key? key, required this.onclickLogin}) : super(key: key);
 
   @override
-  State<signupPage> createState() => _signupPage(
-  );
+  State<signupPage> createState() => _signupPage();
 }
 
 class _signupPage extends State<signupPage> {
@@ -28,7 +27,8 @@ class _signupPage extends State<signupPage> {
         password: passwordSignup.text.trim(),
       );
     } on FirebaseAuthException catch (e) {
-      print(e);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Email sudah terdaftar")));
     }
   }
 

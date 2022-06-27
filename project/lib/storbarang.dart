@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,8 @@ class _AddBarangState extends State<AddBarang> {
   final kategori = TextEditingController();
   final jumlah = TextEditingController();
   final user = FirebaseAuth.instance.currentUser!;
+  bool snackbar = false;
+
 
   @override
   Widget build(BuildContext context) {

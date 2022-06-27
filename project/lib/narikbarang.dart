@@ -8,7 +8,12 @@ class narikbarang extends StatefulWidget {
   final String namabarang;
   final String jumlah;
   final String kategori;
-  const narikbarang({Key? key, required this.namabarang, required this.kategori, required this.jumlah}) : super(key: key);
+  const narikbarang(
+      {Key? key,
+      required this.namabarang,
+      required this.kategori,
+      required this.jumlah})
+      : super(key: key);
 
   @override
   State<narikbarang> createState() => _narikbarangState();
@@ -36,7 +41,8 @@ class _narikbarangState extends State<narikbarang> {
             TextField(
               controller: jumlahtarik,
               textInputAction: TextInputAction.next,
-              decoration: InputDecoration(labelText: "Jumlah barang yang mau ditarik/ditambah"),
+              decoration: InputDecoration(
+                  labelText: "Jumlah barang yang mau ditarik/ditambah"),
             ),
             SizedBox(height: 30),
             RaisedButton(
@@ -44,20 +50,28 @@ class _narikbarangState extends State<narikbarang> {
               onPressed: () {
                 total = int.parse(widget.jumlah) - int.parse(jumlahtarik.text);
                 var dtBaru = StokBarang(
-                    namabarang: widget.namabarang,
-                    kategori: widget.kategori,
-                    jumlah: total.toString(),
-                  );
-                  var dtHistory = History(
-                    nama: widget.namabarang,
-                    kategori: widget.kategori,
-                    jumlah: "-" + jumlahtarik.text,
-                    User: user.email.toString(),
-                  );
-                //kalo jumlahnya <=0 langsung delete
-                Database.updateData(item: dtBaru);
-                Database.addhistory(item: dtHistory);
-                Navigator.pop(context);
+                  namabarang: widget.namabarang,
+                  kategori: widget.kategori,
+                  jumlah: total.toString(),
+                );
+                var dtHistory = History(
+                  nama: widget.namabarang,
+                  kategori: widget.kategori,
+                  jumlah: "-" + jumlahtarik.text,
+                  User: user.email.toString(),
+                );
+                if (total == 0) {
+                  Database.delData(namabaranghapus: dtBaru.namabarang);
+                  Database.addhistory(item: dtHistory);
+                  Navigator.pop(context);
+                } else if (total <= 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Penarikan melebihi stok")));
+                } else {
+                  Database.updateData(item: dtBaru);
+                  Database.addhistory(item: dtHistory);
+                  Navigator.pop(context);
+                }
               },
             ),
             SizedBox(height: 30),
@@ -66,17 +80,16 @@ class _narikbarangState extends State<narikbarang> {
               onPressed: () {
                 total = int.parse(widget.jumlah) + int.parse(jumlahtarik.text);
                 var dtBaru = StokBarang(
-                    namabarang: widget.namabarang,
-                    kategori: widget.kategori,
-                    jumlah: total.toString(),
-                  );
-                  var dtHistory = History(
-                    nama: widget.namabarang,
-                    kategori: widget.kategori,
-                    jumlah: "+" + jumlahtarik.text,
-                    User: user.email.toString(),
-                  );
-                //kalo jumlahnya <=0 langsung delete
+                  namabarang: widget.namabarang,
+                  kategori: widget.kategori,
+                  jumlah: total.toString(),
+                );
+                var dtHistory = History(
+                  nama: widget.namabarang,
+                  kategori: widget.kategori,
+                  jumlah: "+" + jumlahtarik.text,
+                  User: user.email.toString(),
+                );
                 Database.updateData(item: dtBaru);
                 Database.addhistory(item: dtHistory);
                 Navigator.pop(context);

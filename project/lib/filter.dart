@@ -20,7 +20,7 @@ class PageFilter extends StatefulWidget {
 class _PageFilterState extends State<PageFilter> {
   final search = TextEditingController();
   final items = [];
-  String name = " ";
+  String name = "";
   String? value;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference barang = FirebaseFirestore.instance.collection('tbStok');
@@ -42,12 +42,7 @@ class _PageFilterState extends State<PageFilter> {
             }),
       )),
       body: StreamBuilder<QuerySnapshot>(
-          stream: (name != " " && name != null)
-              ? FirebaseFirestore.instance
-                  .collection('tbStok')
-                  .where('kategori', isEqualTo: name)
-                  .snapshots()
-              : FirebaseFirestore.instance.collection("tbStok").snapshots(),
+          stream: FirebaseFirestore.instance.collection("tbStok").snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text("error");
@@ -58,14 +53,49 @@ class _PageFilterState extends State<PageFilter> {
                     String lvnamabarang = dsStok["namabarang"];
                     String lvkategori = dsStok["kategori"];
                     String lvjumlah = dsStok["jumlah"];
-                    return Card(
-                      child: ListTile(
-                        title: Text(lvnamabarang),
-                        subtitle: Text(lvkategori),
-                        trailing: Text(lvjumlah),
-                        onTap: () {},
-                      ),
-                    );
+                    if (name.isEmpty) {
+                      return Card(
+                        child: ListTile(
+                          title: Text(lvnamabarang),
+                          subtitle: Text(lvkategori),
+                          trailing: Text(lvjumlah),
+                          onTap: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => narikbarang()),
+                            // );
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => narikbarang(
+                                    namabarang: lvnamabarang,
+                                    kategori: lvkategori,
+                                    jumlah: lvjumlah)));
+                          },
+                        ),
+                      );
+                    }
+                    if (dsStok["kategori"] == name) {
+                      return Card(
+                        child: ListTile(
+                          title: Text(lvnamabarang),
+                          subtitle: Text(lvkategori),
+                          trailing: Text(lvjumlah),
+                          onTap: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => narikbarang()),
+                            // );
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => narikbarang(
+                                    namabarang: lvnamabarang,
+                                    kategori: lvkategori,
+                                    jumlah: lvjumlah)));
+                          },
+                        ),
+                      );
+                    }
+                    return Container();
                   },
                   separatorBuilder: (context, index) => SizedBox(height: 8.0),
                   itemCount: snapshot.data!.docs.length);

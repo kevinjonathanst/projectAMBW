@@ -20,7 +20,7 @@ class homePage extends StatefulWidget {
 
 class _homePageState extends State<homePage> {
   int _selectedIndex = 0;
-  String name = " ";
+  String name = "";
   final user = FirebaseAuth.instance.currentUser!;
   final search = TextEditingController();
   static const TextStyle optionStyle =
@@ -89,17 +89,11 @@ class _homePageState extends State<homePage> {
         child: Icon(Icons.search),
       ),
       body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection('tbStok').snapshots(),
-          // stream: (name != " " && name != null)
-          //     ? FirebaseFirestore.instance
-          //         .collection('tbStok')
-          //         .where('namabarang', isEqualTo: name)
-          //         .snapshots()
-          //     : FirebaseFirestore.instance.collection("tbStok").snapshots(),
+          stream: FirebaseFirestore.instance.collection("tbStok").snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text("error");
-            } else if (snapshot.hasData || name.isEmpty) {
+            } else if (snapshot.hasData || snapshot.data != null) {
               return ListView.separated(
                   itemBuilder: (context, index) {
                     DocumentSnapshot dsStok = snapshot.data!.docs[index];
@@ -127,9 +121,7 @@ class _homePageState extends State<homePage> {
                         ),
                       );
                     }
-                    if (dsStok["namabarang"]
-                        .toString()
-                        .startsWith(name.toLowerCase())) {
+                    if (dsStok["namabarang"] == name) {
                       return Card(
                         child: ListTile(
                           title: Text(lvnamabarang),

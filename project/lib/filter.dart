@@ -74,7 +74,7 @@ class _PageFilterState extends State<PageFilter> {
                         ),
                       );
                     }
-                    if (dsStok["kategori"] == name) {
+                    if (dsStok["kategori"].toString().startsWith(name)) {
                       return Card(
                         child: ListTile(
                           title: Text(lvnamabarang),

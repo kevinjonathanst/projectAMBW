@@ -70,7 +70,7 @@ class _homePageState extends State<homePage> {
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.search),
               border: InputBorder.none,
-              hintText: 'Search nama...',
+              hintText: 'Search...',
             ),
             onChanged: (val) {
               setState(() {
@@ -81,12 +81,9 @@ class _homePageState extends State<homePage> {
       //create a button on top of the screen
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PageFilter()),
-          );
+            FirebaseAuth.instance.signOut();
         },
-        child: Icon(Icons.search),
+        child: Icon(Icons.exit_to_app),
       ),
       body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance.collection("tbStok").snapshots(),
@@ -121,7 +118,7 @@ class _homePageState extends State<homePage> {
                         ),
                       );
                     }
-                    if (dsStok["namabarang"] == name) {
+                    if (dsStok["namabarang"].toString().startsWith(name) || dsStok["kategori"].toString().startsWith(name)) {
                       return Card(
                         child: ListTile(
                           title: Text(lvnamabarang),

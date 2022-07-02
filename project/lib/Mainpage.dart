@@ -76,8 +76,7 @@ class _homePageState extends State<homePage> {
               setState(() {
                 name = val;
               });
-            }), 
-            
+            }),
       )),
       //create a button on top of the screen
       floatingActionButton: FloatingActionButton(
@@ -90,54 +89,81 @@ class _homePageState extends State<homePage> {
         child: Icon(Icons.search),
       ),
       body: StreamBuilder<QuerySnapshot>(
-              stream: (name != " " && name != null)
-              ? FirebaseFirestore.instance
-                  .collection('tbStok')
-                  .where('namabarang', isEqualTo: name)
-                  .snapshots():
-              FirebaseFirestore.instance.collection("tbStok").snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text("error");
-                } else if (snapshot.hasData || snapshot.data != null) {
-                  return ListView.separated(
-                      itemBuilder: (context, index) {
-                        DocumentSnapshot dsStok = snapshot.data!.docs[index];
-                        String lvnamabarang = dsStok["namabarang"];
-                        String lvkategori = dsStok["kategori"];
-                        String lvjumlah = dsStok["jumlah"];
-                        return Card(
-                          child: ListTile(
-                            title: Text(lvnamabarang),
-                            subtitle: Text(lvkategori),
-                            trailing: Text(lvjumlah),
-                            onTap: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //       builder: (context) => narikbarang()),
-                              // );
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => narikbarang(
-                                      namabarang: lvnamabarang,
-                                      kategori: lvkategori,
-                                      jumlah: lvjumlah)));
-                            },
-                          ),
-                        );
-                      },
-                      separatorBuilder: (context, index) => SizedBox(height: 8.0),
-                      itemCount: snapshot.data!.docs.length);
-                }
-                return Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Colors.pinkAccent,
-                    ),
-                  ),
-                );
-              }),
-            
+          stream: FirebaseFirestore.instance.collection('tbStok').snapshots(),
+          // stream: (name != " " && name != null)
+          //     ? FirebaseFirestore.instance
+          //         .collection('tbStok')
+          //         .where('namabarang', isEqualTo: name)
+          //         .snapshots()
+          //     : FirebaseFirestore.instance.collection("tbStok").snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text("error");
+            } else if (snapshot.hasData || name.isEmpty) {
+              return ListView.separated(
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot dsStok = snapshot.data!.docs[index];
+                    String lvnamabarang = dsStok["namabarang"];
+                    String lvkategori = dsStok["kategori"];
+                    String lvjumlah = dsStok["jumlah"];
+                    if (name.isEmpty) {
+                      return Card(
+                        child: ListTile(
+                          title: Text(lvnamabarang),
+                          subtitle: Text(lvkategori),
+                          trailing: Text(lvjumlah),
+                          onTap: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => narikbarang()),
+                            // );
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => narikbarang(
+                                    namabarang: lvnamabarang,
+                                    kategori: lvkategori,
+                                    jumlah: lvjumlah)));
+                          },
+                        ),
+                      );
+                    }
+                    if (dsStok["namabarang"]
+                        .toString()
+                        .startsWith(name.toLowerCase())) {
+                      return Card(
+                        child: ListTile(
+                          title: Text(lvnamabarang),
+                          subtitle: Text(lvkategori),
+                          trailing: Text(lvjumlah),
+                          onTap: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => narikbarang()),
+                            // );
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => narikbarang(
+                                    namabarang: lvnamabarang,
+                                    kategori: lvkategori,
+                                    jumlah: lvjumlah)));
+                          },
+                        ),
+                      );
+                    }
+                    return Container();
+                  },
+                  separatorBuilder: (context, index) => SizedBox(height: 8.0),
+                  itemCount: snapshot.data!.docs.length);
+            }
+            return Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Colors.pinkAccent,
+                ),
+              ),
+            );
+          }),
+
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
